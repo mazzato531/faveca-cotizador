@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAVECA - Cotizador de Precios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d6b4f 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* LOGIN */
+        .login-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 400px;
+            margin: 50px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .login-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a472a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a472a;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #1a472a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2d6b4f;
+        }
+
+        .btn-secondary {
+            background: #666;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* SECCIÓN DE ADMINISTRADOR */
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-section h2 {
+            color: #1a472a;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a472a;
+            padding-bottom: 10px;
+        }
+
+        .admin-controls {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .differential-group {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .differential-group .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .differential-group input {
+            padding: 10px;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            width: auto;
+        }
+
+        /* SECCIÓN DE VENDEDOR */
+        .vendor-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .vendor-section h2 {
+            color: #1a472a;
+            margin-bottom: 20px;
+        }
+
+        .discounts-section {
+            background: #f0f7f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1a472a;
+        }
+
+        .discounts-section h3 {
+            color: #1a472a;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .discount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .discount-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .discount-item:hover {
+            border-color: #1a472a;
+            background: #f5f9f7;
+        }
+
+        .discount-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .discount-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+            flex: 1;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .products-table thead {
+            background: #1a472a;
+            color: white;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .products-table tbody tr:hover {
+            background: #f5f9f7;
+        }
+
+        .products-table th {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2d6b4f;
+        }
+
+        .line-header {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .line-header td {
+            padding: 12px 15px;
+            border: none;
+            border-top: 2px solid #1a472a;
+            border-bottom: 2px solid #1a472a;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-print {
+            background: #2196F3;
+            padding: 12px 25px;
+            width: auto;
+        }
+
+        .btn-print:hover {
+            background: #1976D2;
+        }
+
+        .btn-logout {
+            background: #d32f2f;
+            padding: 12px 25px;
+            width: auto;
+        }
+
+        .btn-logout:hover {
+            background: #b71c1c;
+        }
+
+        .summary-box {
+            background: #f0f7f3;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .summary-box h3 {
+            color: #1a472a;
+            margin-bottom: 15px;
+        }
+
+        .summary-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .summary-item label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .summary-item .value {
+            font-size: 18px;
+            color: #2d6b4f;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .header, .discounts-section, .actions, .btn, .vendor-section > .actions {
+                display: none;
+            }
+
+            .products-table {
+                page-break-inside: avoid;
+            }
+
+            .products-table tbody tr:hover {
+                background: white;
+            }
+
+            .login-section, .admin-section {
+                display: none;
+            }
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #ddd;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            background: #1a472a;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛏️ FAVECA</h1>
+        <p>Sistema de Cotización de Precios</p>
+    </div>
+
+    <div class="container">
+        <!-- LOGIN -->
+        <div id="loginSection" class="login-section">
+            <h2>Acceso Administrador</h2>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" id="passwordInput" placeholder="Ingresa la contraseña">
+            </div>
+            <button class="btn" onclick="loginAdmin()">Ingresar como Administrador</button>
+            <button class="btn btn-secondary" onclick="goToVendor()">Ir a Sección Vendedor</button>
+            <div id="loginError" class="error-message hidden"></div>
+        </div>
+
+        <!-- SECCIÓN ADMINISTRADOR -->
+        <div id="adminSection" class="admin-section hidden">
+            <h2>⚙️ Panel de Administrador</h2>
+            
+            <div class="admin-controls">
+                <h3 style="color: #1a472a; margin-bottom: 15px;">Configurar Diferencial Cambiario</h3>
+                <div class="differential-group">
+                    <div class="form-group">
+                        <label>Diferencial Cambiario (Multiplicador):</label>
+                        <input type="number" id="differentialInput" value="1.40" step="0.01" min="0.01">
+                    </div>
+                    <button class="btn btn-small" onclick="saveDifferential()">Guardar Diferencial</button>
+                </div>
+                <div id="diffMessage" style="margin-top: 10px; color: green; font-size: 14px;"></div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-logout" onclick="logoutAdmin()">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN VENDEDOR -->
+        <div id="vendorSection" class="vendor-section hidden">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="goToVendor()">📋 Cotizador</button>
+                <button class="nav-btn" onclick="logoutVendor()">🚪 Salir</button>
+            </div>
+
+            <h2>💰 Cotizador de Precios</h2>
+
+            <div class="discounts-section">
+                <h3>Selecciona los Descuentos Aplicables:</h3>
+                <div class="discount-options">
+                    <div class="discount-item">
+                        <input type="checkbox" id="discount10" onchange="updatePrices()">
+                        <label for="discount10">Más de 10 unidades (-5%)</label>
+                    </div>
+                    <div class="discount-item">
+                        <input type="checkbox" id="discount20" onchange="updatePrices()">
+                        <label for="discount20">Más de 20 unidades (-5%)</label>
+                    </div>
+                    <div class="discount-item">
+                        <input type="checkbox" id="discountCash" onchange="updatePrices()">
+                        <label for="discountCash">Pago Contado Máx 15 días (-5%)</label>
+                    </div>
+                </div>
+            </div>
+
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio Bolívares (Tasa BCV)</th>
+                        <th>Precio en Divisas</th>
+                        <th style="background: #4CAF50;">Precio Final</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTable">
+                </tbody>
+            </table>
+
+            <div class="summary-box">
+                <h3>Resumen de Cotización</h3>
+                <div class="summary-info">
+                    <div class="summary-item">
+                        <label>Diferencial Cambiario Aplicado:</label>
+                        <div class="value" id="summaryDifferential">1.40</div>
+                    </div>
+                    <div class="summary-item">
+                        <label>Descuentos Aplicados:</label>
+                        <div class="value" id="summaryDiscounts">Ninguno</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir Cotización</button>
+                <button class="btn btn-logout" onclick="logoutVendor()">Salir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123";
+
+        const products = [
+            // LÍNEA DE BOX
+            { id: 1, line: "LÍNEA DE BOX", name: "BEDBOX 78x188", price: 120.40 },
+            { id: 2, line: "LÍNEA DE BOX", name: "BEDBOX 98x188", price: 123.20 },
+            { id: 3, line: "LÍNEA DE BOX", name: "BEDBOX 98x198", price: 130.20 },
+            { id: 4, line: "LÍNEA DE BOX", name: "BEDBOX 138x188", price: 161.00 },
+            { id: 5, line: "LÍNEA DE BOX", name: "BEDBOX 158x188", price: 193.20 },
+            { id: 6, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX rectangular", price: 26.60 },
+            { id: 7, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88", price: 39.20 },
+
+            // LÍNEA DE LITERAS
+            { id: 8, line: "LÍNEA DE LITERAS", name: "SEVILLA 100-140x190", price: 428.40 },
+            { id: 9, line: "LÍNEA DE LITERAS", name: "CAPRI 100-140x190", price: 428.40 },
+            { id: 10, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 80x190", price: 266.00 },
+            { id: 11, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 100x190", price: 277.20 },
+            { id: 12, line: "LÍNEA DE LITERAS", name: "SEGOVIA 80x190", price: 219.80 },
+            { id: 13, line: "LÍNEA DE LITERAS", name: "SEGOVIA 100x190", price: 268.80 },
+            { id: 14, line: "LÍNEA DE LITERAS", name: "TRILITERA SEGOVIA 100x190", price: 439.60 },
+            { id: 15, line: "LÍNEA DE LITERAS", name: "INSTITUCIONAL 100x190", price: 170.94 },
+
+            // LÍNEA DE CAMAS
+            { id: 16, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 80x190", price: 137.20 },
+            { id: 17, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 100x190", price: 156.80 },
+            { id: 18, line: "LÍNEA DE CAMAS", name: "VICTORIA 80x190", price: 162.40 },
+            { id: 19, line: "LÍNEA DE CAMAS", name: "VICTORIA 100x190", price: 177.80 },
+            { id: 20, line: "LÍNEA DE CAMAS", name: "VICTORIA 140x190", price: 236.60 },
+            { id: 21, line: "LÍNEA DE CAMAS", name: "MODENA 100x190", price: 145.60 },
+            { id: 22, line: "LÍNEA DE CAMAS", name: "MODENA 140x190", price: 211.40 },
+            { id: 23, line: "LÍNEA DE CAMAS", name: "CLINICA 100x190", price: 338.80 },
+            { id: 24, line: "LÍNEA DE CAMAS", name: "DIVAN CAMA SOFIA 70x180", price: 187.60 },
+
+            // LÍNEA DE JERGONES
+            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188", price: 120.40 },
+            { id: 26, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188", price: 123.20 }
+        ];
+
+        let currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
+
+        function loginAdmin() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('adminSection').classList.remove('hidden');
+                document.getElementById('differentialInput').value = currentDifferential;
+            } else {
+                document.getElementById('loginError').textContent = '❌ Contraseña incorrecta';
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function saveDifferential() {
+            const newDiff = parseFloat(document.getElementById('differentialInput').value);
+            if (newDiff > 0) {
+                currentDifferential = newDiff;
+                localStorage.setItem('differential', newDiff);
+                document.getElementById('diffMessage').textContent = '✅ Diferencial cambiario guardado correctamente';
+                setTimeout(() => {
+                    document.getElementById('diffMessage').textContent = '';
+                }, 3000);
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function goToVendor() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('vendorSection').classList.remove('hidden');
+            renderProducts();
+            updateSummary();
+        }
+
+        function logoutVendor() {
+            document.getElementById('vendorSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            clearDiscounts();
+        }
+
+        function clearDiscounts() {
+            document.getElementById('discount10').checked = false;
+            document.getElementById('discount20').checked = false;
+            document.getElementById('discountCash').checked = false;
+        }
+
+        function renderProducts() {
+            const table = document.getElementById('productsTable');
+            table.innerHTML = '';
+            let lastLine = '';
+
+            products.forEach(product => {
+                if (product.line !== lastLine) {
+                    const lineRow = document.createElement('tr');
+                    lineRow.className = 'line-header';
+                    lineRow.innerHTML = `<td colspan="4">${product.line}</td>`;
+                    table.appendChild(lineRow);
+                    lastLine = product.line;
+                }
+
+                const row = document.createElement('tr');
+                const priceBCV = product.price;
+                const priceDivisas = (product.price * currentDifferential).toFixed(2);
+                const priceWithDiscount = calculateFinalPrice(priceDivisas);
+
+                row.innerHTML = `
+                    <td class="product-name">${product.name}</td>
+                    <td class="price">$${priceBCV.toFixed(2)}</td>
+                    <td class="price">$${priceDivisas}</td>
+                    <td class="price" style="background: #e8f5e9; color: #2d6b4f;">$${priceWithDiscount}</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function calculateFinalPrice(basePrice) {
+            let price = parseFloat(basePrice);
+            let discountPercent = 0;
+
+            if (document.getElementById('discount10').checked) discountPercent += 5;
+            if (document.getElementById('discount20').checked) discountPercent += 5;
+            if (document.getElementById('discountCash').checked) discountPercent += 5;
+
+            const discountAmount = price * (discountPercent / 100);
+            return (price - discountAmount).toFixed(2);
+        }
+
+        function updatePrices() {
+            renderProducts();
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryDifferential').textContent = currentDifferential.toFixed(2);
+
+            const discounts = [];
+            if (document.getElementById('discount10').checked) discounts.push('Más de 10 unidades (-5%)');
+            if (document.getElementById('discount20').checked) discounts.push('Más de 20 unidades (-5%)');
+            if (document.getElementById('discountCash').checked) discounts.push('Contado Máx 15 días (-5%)');
+
+            const totalDiscount = discounts.length > 0 ? discounts.length * 5 : 0;
+            document.getElementById('summaryDiscounts').textContent = 
+                discounts.length > 0 ? `${discounts.join(', ')} = -${totalDiscount}%` : 'Ninguno';
+        }
+
+        // Inicializar
+        currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
+    </script>
+</body>
+</html>
