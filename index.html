@@ -572,9 +572,19 @@
         function calculateFinalPrice(basePrice) {
             let price = parseFloat(basePrice);
 
-            if (document.getElementById('discount10').checked) price = price * 0.95;
-            if (document.getElementById('discount20').checked) price = price * 0.95;
-            if (document.getElementById('discountCash').checked) price = price * 0.95;
+            // Descuentos por cantidad (independientes, pero más de 20 incluye más de 10)
+            if (document.getElementById('discount20').checked) {
+                // Más de 20 = 5% + 5% = 10% acumulativo
+                price = price * 0.95 * 0.95;
+            } else if (document.getElementById('discount10').checked) {
+                // Más de 10 = 5%
+                price = price * 0.95;
+            }
+
+            // Descuento de contado (aplica adicional)
+            if (document.getElementById('discountCash').checked) {
+                price = price * 0.95;
+            }
 
             return price;
         }
