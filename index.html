@@ -286,16 +286,6 @@
             flex-wrap: wrap;
         }
 
-        .btn-print {
-            background: #2196F3;
-            padding: 12px 25px;
-            width: auto;
-        }
-
-        .btn-print:hover {
-            background: #1976D2;
-        }
-
         .btn-logout {
             background: #d32f2f;
             padding: 12px 25px;
@@ -344,28 +334,6 @@
             font-size: 18px;
             color: #2d6b4f;
             font-weight: bold;
-        }
-
-        @media print {
-            body {
-                background: white;
-            }
-
-            .header, .discounts-section, .actions, .btn, .vendor-section > .actions {
-                display: none;
-            }
-
-            .products-table {
-                page-break-inside: avoid;
-            }
-
-            .products-table tbody tr:hover {
-                background: white;
-            }
-
-            .login-section, .admin-section {
-                display: none;
-            }
         }
 
         .nav-buttons {
@@ -449,15 +417,15 @@
                 <div class="discount-options">
                     <div class="discount-item">
                         <input type="checkbox" id="discount10" onchange="updatePrices()">
-                        <label for="discount10">Más de 10 unidades (-5%)</label>
+                        <label for="discount10">Más de 10 unidades</label>
                     </div>
                     <div class="discount-item">
                         <input type="checkbox" id="discount20" onchange="updatePrices()">
-                        <label for="discount20">Más de 20 unidades (-5%)</label>
+                        <label for="discount20">Más de 20 unidades</label>
                     </div>
                     <div class="discount-item">
                         <input type="checkbox" id="discountCash" onchange="updatePrices()">
-                        <label for="discountCash">Pago Contado Máx 15 días (-5%)</label>
+                        <label for="discountCash">Pago de Contado Max 15 Días</label>
                     </div>
                 </div>
             </div>
@@ -466,31 +434,17 @@
                 <thead>
                     <tr>
                         <th>Producto</th>
-                        <th>Precio Bolívares (Tasa BCV)</th>
-                        <th>Precio en Divisas</th>
-                        <th style="background: #4CAF50;">Precio Final</th>
+                        <th>Precio $ Tasa BCV</th>
+                        <th>Precio % Descuento Especial</th>
                     </tr>
                 </thead>
                 <tbody id="productsTable">
                 </tbody>
             </table>
 
-            <div class="summary-box">
-                <h3>Resumen de Cotización</h3>
-                <div class="summary-info">
-                    <div class="summary-item">
-                        <label>Diferencial Cambiario Aplicado:</label>
-                        <div class="value" id="summaryDifferential">1.40</div>
-                    </div>
-                    <div class="summary-item">
-                        <label>Descuentos Aplicados:</label>
-                        <div class="value" id="summaryDiscounts">Ninguno</div>
-                    </div>
-                </div>
-            </div>
+
 
             <div class="actions">
-                <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir Cotización</button>
                 <button class="btn btn-logout" onclick="logoutVendor()">Salir</button>
             </div>
         </div>
@@ -501,38 +455,38 @@
 
         const products = [
             // LÍNEA DE BOX
-            { id: 1, line: "LÍNEA DE BOX", name: "BEDBOX 78x188", price: 120.40 },
-            { id: 2, line: "LÍNEA DE BOX", name: "BEDBOX 98x188", price: 123.20 },
-            { id: 3, line: "LÍNEA DE BOX", name: "BEDBOX 98x198", price: 130.20 },
-            { id: 4, line: "LÍNEA DE BOX", name: "BEDBOX 138x188", price: 161.00 },
-            { id: 5, line: "LÍNEA DE BOX", name: "BEDBOX 158x188", price: 193.20 },
-            { id: 6, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX rectangular", price: 26.60 },
-            { id: 7, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88", price: 39.20 },
+            { id: 1, line: "LÍNEA DE BOX", name: "BEDBOX 78x188", priceBCV: 120.40, priceSpecial: 86.00 },
+            { id: 2, line: "LÍNEA DE BOX", name: "BEDBOX 98x188", priceBCV: 123.20, priceSpecial: 88.00 },
+            { id: 3, line: "LÍNEA DE BOX", name: "BEDBOX 98x198", priceBCV: 130.20, priceSpecial: 93.00 },
+            { id: 4, line: "LÍNEA DE BOX", name: "BEDBOX 138x188", priceBCV: 161.00, priceSpecial: 115.00 },
+            { id: 5, line: "LÍNEA DE BOX", name: "BEDBOX 158x188", priceBCV: 193.20, priceSpecial: 138.00 },
+            { id: 6, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX rectangular", priceBCV: 26.60, priceSpecial: 19.00 },
+            { id: 7, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88", priceBCV: 39.20, priceSpecial: 28.00 },
 
             // LÍNEA DE LITERAS
-            { id: 8, line: "LÍNEA DE LITERAS", name: "SEVILLA 100-140x190", price: 428.40 },
-            { id: 9, line: "LÍNEA DE LITERAS", name: "CAPRI 100-140x190", price: 428.40 },
-            { id: 10, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 80x190", price: 266.00 },
-            { id: 11, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 100x190", price: 277.20 },
-            { id: 12, line: "LÍNEA DE LITERAS", name: "SEGOVIA 80x190", price: 219.80 },
-            { id: 13, line: "LÍNEA DE LITERAS", name: "SEGOVIA 100x190", price: 268.80 },
-            { id: 14, line: "LÍNEA DE LITERAS", name: "TRILITERA SEGOVIA 100x190", price: 439.60 },
-            { id: 15, line: "LÍNEA DE LITERAS", name: "INSTITUCIONAL 100x190", price: 170.94 },
+            { id: 8, line: "LÍNEA DE LITERAS", name: "SEVILLA 100-140x190", priceBCV: 428.40, priceSpecial: 306.00 },
+            { id: 9, line: "LÍNEA DE LITERAS", name: "CAPRI 100-140x190", priceBCV: 428.40, priceSpecial: 306.00 },
+            { id: 10, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 80x190", priceBCV: 266.00, priceSpecial: 190.00 },
+            { id: 11, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 100x190", priceBCV: 277.20, priceSpecial: 198.00 },
+            { id: 12, line: "LÍNEA DE LITERAS", name: "SEGOVIA 80x190", priceBCV: 219.80, priceSpecial: 157.00 },
+            { id: 13, line: "LÍNEA DE LITERAS", name: "SEGOVIA 100x190", priceBCV: 268.80, priceSpecial: 192.00 },
+            { id: 14, line: "LÍNEA DE LITERAS", name: "TRILITERA SEGOVIA 100x190", priceBCV: 439.60, priceSpecial: 314.00 },
+            { id: 15, line: "LÍNEA DE LITERAS", name: "INSTITUCIONAL 100x190", priceBCV: 170.94, priceSpecial: 122.10 },
 
             // LÍNEA DE CAMAS
-            { id: 16, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 80x190", price: 137.20 },
-            { id: 17, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 100x190", price: 156.80 },
-            { id: 18, line: "LÍNEA DE CAMAS", name: "VICTORIA 80x190", price: 162.40 },
-            { id: 19, line: "LÍNEA DE CAMAS", name: "VICTORIA 100x190", price: 177.80 },
-            { id: 20, line: "LÍNEA DE CAMAS", name: "VICTORIA 140x190", price: 236.60 },
-            { id: 21, line: "LÍNEA DE CAMAS", name: "MODENA 100x190", price: 145.60 },
-            { id: 22, line: "LÍNEA DE CAMAS", name: "MODENA 140x190", price: 211.40 },
-            { id: 23, line: "LÍNEA DE CAMAS", name: "CLINICA 100x190", price: 338.80 },
-            { id: 24, line: "LÍNEA DE CAMAS", name: "DIVAN CAMA SOFIA 70x180", price: 187.60 },
+            { id: 16, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 80x190", priceBCV: 137.20, priceSpecial: 98.00 },
+            { id: 17, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 100x190", priceBCV: 156.80, priceSpecial: 112.00 },
+            { id: 18, line: "LÍNEA DE CAMAS", name: "VICTORIA 80x190", priceBCV: 162.40, priceSpecial: 116.00 },
+            { id: 19, line: "LÍNEA DE CAMAS", name: "VICTORIA 100x190", priceBCV: 177.80, priceSpecial: 127.00 },
+            { id: 20, line: "LÍNEA DE CAMAS", name: "VICTORIA 140x190", priceBCV: 236.60, priceSpecial: 169.00 },
+            { id: 21, line: "LÍNEA DE CAMAS", name: "MODENA 100x190", priceBCV: 145.60, priceSpecial: 104.00 },
+            { id: 22, line: "LÍNEA DE CAMAS", name: "MODENA 140x190", priceBCV: 211.40, priceSpecial: 151.00 },
+            { id: 23, line: "LÍNEA DE CAMAS", name: "CLINICA 100x190", priceBCV: 338.80, priceSpecial: 242.00 },
+            { id: 24, line: "LÍNEA DE CAMAS", name: "DIVAN CAMA SOFIA 70x180", priceBCV: 187.60, priceSpecial: 134.00 },
 
             // LÍNEA DE JERGONES
-            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188", price: 120.40 },
-            { id: 26, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188", price: 123.20 }
+            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188", priceBCV: 120.40, priceSpecial: 86.00 },
+            { id: 26, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188", priceBCV: 123.20, priceSpecial: 88.00 }
         ];
 
         let currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
@@ -573,7 +527,6 @@
             document.getElementById('adminSection').classList.add('hidden');
             document.getElementById('vendorSection').classList.remove('hidden');
             renderProducts();
-            updateSummary();
         }
 
         function logoutVendor() {
@@ -598,21 +551,19 @@
                 if (product.line !== lastLine) {
                     const lineRow = document.createElement('tr');
                     lineRow.className = 'line-header';
-                    lineRow.innerHTML = `<td colspan="4">${product.line}</td>`;
+                    lineRow.innerHTML = `<td colspan="3">${product.line}</td>`;
                     table.appendChild(lineRow);
                     lastLine = product.line;
                 }
 
                 const row = document.createElement('tr');
-                const priceBCV = product.price;
-                const priceDivisas = (product.price * currentDifferential).toFixed(2);
-                const priceWithDiscount = calculateFinalPrice(priceDivisas);
+                const priceBCV = calculateFinalPrice(product.priceBCV);
+                const priceSpecial = calculateFinalPrice(product.priceSpecial);
 
                 row.innerHTML = `
                     <td class="product-name">${product.name}</td>
                     <td class="price">$${priceBCV.toFixed(2)}</td>
-                    <td class="price">$${priceDivisas}</td>
-                    <td class="price" style="background: #e8f5e9; color: #2d6b4f;">$${priceWithDiscount}</td>
+                    <td class="price">$${priceSpecial.toFixed(2)}</td>
                 `;
                 table.appendChild(row);
             });
@@ -620,33 +571,19 @@
 
         function calculateFinalPrice(basePrice) {
             let price = parseFloat(basePrice);
-            let discountPercent = 0;
 
-            if (document.getElementById('discount10').checked) discountPercent += 5;
-            if (document.getElementById('discount20').checked) discountPercent += 5;
-            if (document.getElementById('discountCash').checked) discountPercent += 5;
+            if (document.getElementById('discount10').checked) price = price * 0.95;
+            if (document.getElementById('discount20').checked) price = price * 0.95;
+            if (document.getElementById('discountCash').checked) price = price * 0.95;
 
-            const discountAmount = price * (discountPercent / 100);
-            return (price - discountAmount).toFixed(2);
+            return price;
         }
 
         function updatePrices() {
             renderProducts();
-            updateSummary();
         }
 
-        function updateSummary() {
-            document.getElementById('summaryDifferential').textContent = currentDifferential.toFixed(2);
 
-            const discounts = [];
-            if (document.getElementById('discount10').checked) discounts.push('Más de 10 unidades (-5%)');
-            if (document.getElementById('discount20').checked) discounts.push('Más de 20 unidades (-5%)');
-            if (document.getElementById('discountCash').checked) discounts.push('Contado Máx 15 días (-5%)');
-
-            const totalDiscount = discounts.length > 0 ? discounts.length * 5 : 0;
-            document.getElementById('summaryDiscounts').textContent = 
-                discounts.length > 0 ? `${discounts.join(', ')} = -${totalDiscount}%` : 'Ninguno';
-        }
 
         // Inicializar
         currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
