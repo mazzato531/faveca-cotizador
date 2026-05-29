@@ -442,8 +442,6 @@
                 </tbody>
             </table>
 
-
-
             <div class="actions">
                 <button class="btn btn-logout" onclick="logoutVendor()">Salir</button>
             </div>
@@ -455,38 +453,37 @@
 
         const products = [
             // LÍNEA DE BOX
-            { id: 1, line: "LÍNEA DE BOX", name: "BEDBOX 78x188", priceBCV: 120.40, priceSpecial: 86.00 },
-            { id: 2, line: "LÍNEA DE BOX", name: "BEDBOX 98x188", priceBCV: 123.20, priceSpecial: 88.00 },
-            { id: 3, line: "LÍNEA DE BOX", name: "BEDBOX 98x198", priceBCV: 130.20, priceSpecial: 93.00 },
-            { id: 4, line: "LÍNEA DE BOX", name: "BEDBOX 138x188", priceBCV: 161.00, priceSpecial: 115.00 },
-            { id: 5, line: "LÍNEA DE BOX", name: "BEDBOX 158x188", priceBCV: 193.20, priceSpecial: 138.00 },
-            { id: 6, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX rectangular", priceBCV: 26.60, priceSpecial: 19.00 },
-            { id: 7, line: "LÍNEA DE BOX", name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88", priceBCV: 39.20, priceSpecial: 28.00 },
+            { id: 1,  line: "LÍNEA DE BOX",      name: "BEDBOX 78x188",                            priceBCV: 102.00, priceSpecial:  73.00 },
+            { id: 2,  line: "LÍNEA DE BOX",      name: "BEDBOX 98x188",                            priceBCV: 106.00, priceSpecial:  76.00 },
+            { id: 3,  line: "LÍNEA DE BOX",      name: "BEDBOX 98x198",                            priceBCV: 112.00, priceSpecial:  80.00 },
+            { id: 4,  line: "LÍNEA DE BOX",      name: "BEDBOX 138x188",                           priceBCV: 139.00, priceSpecial:  99.00 },
+            { id: 5,  line: "LÍNEA DE BOX",      name: "BEDBOX 158x188",                           priceBCV: 165.00, priceSpecial: 118.00 },
+            { id: 6,  line: "LÍNEA DE BOX",      name: "JUEGO DE PATAS P/BEDBOX Standard",         priceBCV:  27.00, priceSpecial:  19.00 },
+            { id: 7,  line: "LÍNEA DE BOX",      name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88",        priceBCV:  32.00, priceSpecial:  23.00 },
 
             // LÍNEA DE LITERAS
-            { id: 8, line: "LÍNEA DE LITERAS", name: "SEVILLA 100-140x190", priceBCV: 428.40, priceSpecial: 306.00 },
-            { id: 9, line: "LÍNEA DE LITERAS", name: "CAPRI 100-140x190", priceBCV: 428.40, priceSpecial: 306.00 },
-            { id: 10, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 80x190", priceBCV: 266.00, priceSpecial: 190.00 },
-            { id: 11, line: "LÍNEA DE LITERAS", name: "EXTRAFIRME 100x190", priceBCV: 277.20, priceSpecial: 198.00 },
-            { id: 12, line: "LÍNEA DE LITERAS", name: "SEGOVIA 80x190", priceBCV: 219.80, priceSpecial: 157.00 },
-            { id: 13, line: "LÍNEA DE LITERAS", name: "SEGOVIA 100x190", priceBCV: 268.80, priceSpecial: 192.00 },
-            { id: 14, line: "LÍNEA DE LITERAS", name: "TRILITERA SEGOVIA 100x190", priceBCV: 439.60, priceSpecial: 314.00 },
-            { id: 15, line: "LÍNEA DE LITERAS", name: "INSTITUCIONAL 100x190", priceBCV: 170.94, priceSpecial: 122.10 },
+            { id: 8,  line: "LÍNEA DE LITERAS",  name: "SEVILLA 100-140x190",                      priceBCV: 295.00, priceSpecial: 211.00 },
+            { id: 9,  line: "LÍNEA DE LITERAS",  name: "CAPRI 100-140x190",                        priceBCV: 295.00, priceSpecial: 211.00 },
+            { id: 10, line: "LÍNEA DE LITERAS",  name: "EXTRAFIRME 80x190",                        priceBCV: 235.00, priceSpecial: 168.00 },
+            { id: 11, line: "LÍNEA DE LITERAS",  name: "EXTRAFIRME 100x190",                       priceBCV: 246.00, priceSpecial: 176.00 },
+            { id: 12, line: "LÍNEA DE LITERAS",  name: "SEGOVIA 80x190",                           priceBCV: 220.00, priceSpecial: 157.00 },
+            { id: 13, line: "LÍNEA DE LITERAS",  name: "SEGOVIA 100x190",                          priceBCV: 230.00, priceSpecial: 164.00 },
+            { id: 14, line: "LÍNEA DE LITERAS",  name: "TRILITERA SEGOVIA 100x190",                priceBCV: 332.00, priceSpecial: 237.00 },
+            { id: 15, line: "LÍNEA DE LITERAS",  name: "INSTITUCIONAL 100x190",                    priceBCV: 160.00, priceSpecial: 114.00 },
 
             // LÍNEA DE CAMAS
-            { id: 16, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 80x190", priceBCV: 137.20, priceSpecial: 98.00 },
-            { id: 17, line: "LÍNEA DE CAMAS", name: "SANDWICH DE TUBO 100x190", priceBCV: 156.80, priceSpecial: 112.00 },
-            { id: 18, line: "LÍNEA DE CAMAS", name: "VICTORIA 80x190", priceBCV: 162.40, priceSpecial: 116.00 },
-            { id: 19, line: "LÍNEA DE CAMAS", name: "VICTORIA 100x190", priceBCV: 177.80, priceSpecial: 127.00 },
-            { id: 20, line: "LÍNEA DE CAMAS", name: "VICTORIA 140x190", priceBCV: 236.60, priceSpecial: 169.00 },
-            { id: 21, line: "LÍNEA DE CAMAS", name: "MODENA 100x190", priceBCV: 145.60, priceSpecial: 104.00 },
-            { id: 22, line: "LÍNEA DE CAMAS", name: "MODENA 140x190", priceBCV: 211.40, priceSpecial: 151.00 },
-            { id: 23, line: "LÍNEA DE CAMAS", name: "CLINICA 100x190", priceBCV: 338.80, priceSpecial: 242.00 },
-            { id: 24, line: "LÍNEA DE CAMAS", name: "DIVAN CAMA SOFIA 70x180", priceBCV: 187.60, priceSpecial: 134.00 },
+            { id: 16, line: "LÍNEA DE CAMAS",    name: "SANDWICH DE TUBO 80x190",                  priceBCV: 137.00, priceSpecial:  98.00 },
+            { id: 17, line: "LÍNEA DE CAMAS",    name: "SANDWICH DE TUBO 100x190",                 priceBCV: 157.00, priceSpecial: 112.00 },
+            { id: 18, line: "LÍNEA DE CAMAS",    name: "VICTORIA 80x190",                          priceBCV: 119.00, priceSpecial:  85.00 },
+            { id: 19, line: "LÍNEA DE CAMAS",    name: "VICTORIA 100x190",                         priceBCV: 137.00, priceSpecial:  98.00 },
+            { id: 20, line: "LÍNEA DE CAMAS",    name: "VICTORIA 140x190",                         priceBCV: 196.00, priceSpecial: 140.00 },
+            { id: 21, line: "LÍNEA DE CAMAS",    name: "MODENA 100x190",                           priceBCV: 102.00, priceSpecial:  73.00 },
+            { id: 22, line: "LÍNEA DE CAMAS",    name: "MODENA 140x190",                           priceBCV: 154.00, priceSpecial: 110.00 },
+            { id: 23, line: "LÍNEA DE CAMAS",    name: "CLINICA 100x190",                          priceBCV: 281.00, priceSpecial: 201.00 },
 
             // LÍNEA DE JERGONES
-            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188", priceBCV: 120.40, priceSpecial: 86.00 },
-            { id: 26, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188", priceBCV: 123.20, priceSpecial: 88.00 }
+            { id: 24, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188",  priceBCV: 108.00, priceSpecial:  77.00 },
+            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188",  priceBCV: 111.00, priceSpecial:  79.00 }
         ];
 
         let currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
@@ -557,16 +554,25 @@
                 }
 
                 const row = document.createElement('tr');
-                const priceBCV = calculateFinalPrice(product.priceBCV);
-                const priceSpecial = calculateFinalPrice(product.priceSpecial);
+                const bcvDisplay = product.priceBCV !== null
+                    ? `$${calculateFinalPrice(product.priceBCV)}`
+                    : '—';
+                const specialDisplay = `$${calculateFinalPrice(product.priceSpecial)}`;
 
                 row.innerHTML = `
                     <td class="product-name">${product.name}</td>
-                    <td class="price">$${priceBCV.toFixed(2)}</td>
-                    <td class="price">$${priceSpecial.toFixed(2)}</td>
+                    <td class="price">${bcvDisplay}</td>
+                    <td class="price">${specialDisplay}</td>
                 `;
                 table.appendChild(row);
             });
+        }
+
+        // Redondeo personalizado: si el decimal es <= 0.5 se trunca, si es > 0.5 se sube al entero siguiente
+        function roundPrice(price) {
+            const floor = Math.floor(price);
+            const decimal = price - floor;
+            return decimal > 0.5 ? Math.ceil(price) : floor;
         }
 
         function calculateFinalPrice(basePrice) {
@@ -586,14 +592,12 @@
                 price = price * 0.95;
             }
 
-            return price;
+            return roundPrice(price);
         }
 
         function updatePrices() {
             renderProducts();
         }
-
-
 
         // Inicializar
         currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
