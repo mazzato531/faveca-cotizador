@@ -4,89 +4,377 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAVECA - Cotizador de Precios</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        .header { background: linear-gradient(135deg, #1a472a 0%, #2d6b4f 100%); color: white; padding: 20px; text-align: center; }
-        .header h1 { font-size: 28px; margin-bottom: 5px; }
-        .header p { font-size: 14px; opacity: 0.9; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d6b4f 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-        .login-section { background: white; border-radius: 10px; padding: 40px; max-width: 400px; margin: 50px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .login-section h2 { text-align: center; margin-bottom: 30px; color: #1a472a; }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        .form-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .form-group input:focus { outline: none; border-color: #1a472a; }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
 
-        .btn { width: 100%; padding: 12px; background: #1a472a; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn:hover { background: #2d6b4f; }
-        .btn-secondary { background: #666; margin-top: 10px; }
-        .btn-secondary:hover { background: #555; }
-        .btn-small { padding: 10px 20px; width: auto; }
-        .btn-pdf { background: #1565C0; padding: 12px 25px; width: auto; }
-        .btn-pdf:hover { background: #0d47a1; }
-        .btn-clear { background: #e65100; padding: 12px 25px; width: auto; }
-        .btn-clear:hover { background: #bf360c; }
-        .btn-logout { background: #d32f2f; padding: 12px 25px; width: auto; }
-        .btn-logout:hover { background: #b71c1c; }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-        .error-message { color: #d32f2f; text-align: center; margin-top: 15px; font-size: 14px; }
-        .hidden { display: none; }
+        /* LOGIN */
+        .login-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 400px;
+            margin: 50px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-        .admin-section { background: white; border-radius: 10px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .admin-section h2 { color: #1a472a; margin-bottom: 20px; border-bottom: 3px solid #1a472a; padding-bottom: 10px; }
+        .login-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a472a;
+        }
 
-        .vendor-section { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .vendor-section h2 { color: #1a472a; margin-bottom: 20px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-        .discounts-section { background: #f0f7f3; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 5px solid #1a472a; }
-        .discounts-section h3 { color: #1a472a; margin-bottom: 15px; font-size: 16px; }
-        .discount-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .discount-item { display: flex; align-items: center; background: white; padding: 15px; border-radius: 6px; border: 2px solid #ddd; }
-        .discount-item input[type="checkbox"] { width: 20px; height: 20px; margin-right: 12px; cursor: pointer; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
 
-        .products-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        .products-table thead { background: #1a472a; color: white; }
-        .products-table th, .products-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
-        .product-name { font-weight: bold; color: #1a472a; }
-        .price { font-weight: bold; font-size: 15px; color: #2d6b4f; }
-        .line-header { background: #e8f5e9; font-weight: bold; color: #1a472a; }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
 
-        .qty-input { width: 65px; padding: 6px 8px; border: 2px solid #ddd; border-radius: 6px; text-align: center; }
-        .qty-input:focus { outline: none; border-color: #1a472a; }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a472a;
+        }
 
-        .order-panel { background: #f0f7f3; border: 2px solid #1a472a; border-radius: 10px; padding: 25px; margin-top: 30px; }
-        .order-panel h3 { color: #1a472a; margin-bottom: 20px; }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #1a472a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-        .client-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .actions { text-align: center; margin-top: 25px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        
-        .order-table { width: 100%; border-collapse: collapse; background: white; }
-        .order-table th { background: #1a472a; color: white; padding: 12px; }
-        .order-table td { padding: 10px; border-bottom: 1px solid #ddd; }
-        .grand-total td { background: #1a472a; color: white; font-weight: bold; }
-        
-        .badge { background: #1a472a; color: white; padding: 3px 10px; border-radius: 20px; font-size: 12px; display: inline-block; margin: 2px; }
+        .btn:hover {
+            background: #2d6b4f;
+        }
+
+        .btn-secondary {
+            background: #666;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* SECCIÓN DE ADMINISTRADOR */
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-section h2 {
+            color: #1a472a;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a472a;
+            padding-bottom: 10px;
+        }
+
+        .admin-controls {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .differential-group {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .differential-group .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .differential-group input {
+            padding: 10px;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            width: auto;
+        }
+
+        /* SECCIÓN DE VENDEDOR */
+        .vendor-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .vendor-section h2 {
+            color: #1a472a;
+            margin-bottom: 20px;
+        }
+
+        .discounts-section {
+            background: #f0f7f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1a472a;
+        }
+
+        .discounts-section h3 {
+            color: #1a472a;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .discount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .discount-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .discount-item:hover {
+            border-color: #1a472a;
+            background: #f5f9f7;
+        }
+
+        .discount-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .discount-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+            flex: 1;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .products-table thead {
+            background: #1a472a;
+            color: white;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .products-table tbody tr:hover {
+            background: #f5f9f7;
+        }
+
+        .products-table th {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2d6b4f;
+        }
+
+        .line-header {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .line-header td {
+            padding: 12px 15px;
+            border: none;
+            border-top: 2px solid #1a472a;
+            border-bottom: 2px solid #1a472a;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-logout {
+            background: #d32f2f;
+            padding: 12px 25px;
+            width: auto;
+        }
+
+        .btn-logout:hover {
+            background: #b71c1c;
+        }
+
+        .summary-box {
+            background: #f0f7f3;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .summary-box h3 {
+            color: #1a472a;
+            margin-bottom: 15px;
+        }
+
+        .summary-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .summary-item label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .summary-item .value {
+            font-size: 18px;
+            color: #2d6b4f;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #ddd;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            background: #1a472a;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background: #999;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>FAVECA</h1>
+        <h1>🛏️ FAVECA</h1>
         <p>Sistema de Cotización de Precios</p>
     </div>
 
     <div class="container">
-        <!-- Pantalla de Login -->
+        <!-- LOGIN -->
         <div id="loginSection" class="login-section">
-            <h2>Acceso al Sistema</h2>
+            <h2>Acceso Administrador</h2>
             <div class="form-group">
-                <label>Contraseña de Administrador:</label>
+                <label>Contraseña:</label>
                 <input type="password" id="passwordInput" placeholder="Ingresa la contraseña">
             </div>
             <button class="btn" onclick="loginAdmin()">Ingresar como Administrador</button>
@@ -94,35 +382,50 @@
             <div id="loginError" class="error-message hidden"></div>
         </div>
 
-        <!-- Panel de Administrador -->
+        <!-- SECCIÓN ADMINISTRADOR -->
         <div id="adminSection" class="admin-section hidden">
-            <h2>Panel de Administrador</h2>
-            <div class="form-group">
-                <label>Diferencial Cambiario:</label>
-                <input type="number" id="differentialInput" step="0.01" value="1.40">
+            <h2>⚙️ Panel de Administrador</h2>
+            
+            <div class="admin-controls">
+                <h3 style="color: #1a472a; margin-bottom: 15px;">Configurar Diferencial Cambiario</h3>
+                <div class="differential-group">
+                    <div class="form-group">
+                        <label>Diferencial Cambiario (Multiplicador):</label>
+                        <input type="number" id="differentialInput" value="1.40" step="0.01" min="0.01">
+                    </div>
+                    <button class="btn btn-small" onclick="saveDifferential()">Guardar Diferencial</button>
+                </div>
+                <div id="diffMessage" style="margin-top: 10px; color: green; font-size: 14px;"></div>
             </div>
-            <button class="btn btn-small" onclick="saveDifferential()">Guardar</button>
-            <button class="btn btn-logout" onclick="logoutAdmin()">Cerrar Sesión</button>
+
+            <div style="text-align: center;">
+                <button class="btn btn-logout" onclick="logoutAdmin()">Cerrar Sesión</button>
+            </div>
         </div>
 
-        <!-- Panel de Vendedor -->
+        <!-- SECCIÓN VENDEDOR -->
         <div id="vendorSection" class="vendor-section hidden">
-            <h2>Cotizador de Precios</h2>
-            
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="goToVendor()">📋 Cotizador</button>
+                <button class="nav-btn" onclick="logoutVendor()">🚪 Salir</button>
+            </div>
+
+            <h2>💰 Cotizador de Precios</h2>
+
             <div class="discounts-section">
-                <h3>Descuentos:</h3>
+                <h3>Selecciona los Descuentos Aplicables:</h3>
                 <div class="discount-options">
                     <div class="discount-item">
                         <input type="checkbox" id="discount10" onchange="updatePrices()">
-                        <label>Más de 10 unidades (-5%)</label>
+                        <label for="discount10">Más de 10 unidades</label>
                     </div>
                     <div class="discount-item">
                         <input type="checkbox" id="discount20" onchange="updatePrices()">
-                        <label>Más de 20 unidades (-9.75%)</label>
+                        <label for="discount20">Más de 20 unidades</label>
                     </div>
                     <div class="discount-item">
                         <input type="checkbox" id="discountCash" onchange="updatePrices()">
-                        <label>Pago de Contado (-5%)</label>
+                        <label for="discountCash">Pago de Contado Max 15 Días</label>
                     </div>
                 </div>
             </div>
@@ -131,28 +434,15 @@
                 <thead>
                     <tr>
                         <th>Producto</th>
-                        <th>Precio BCV</th>
-                        <th>Precio Especial</th>
-                        <th>Cantidad</th>
+                        <th>Precio $ Tasa BCV</th>
+                        <th>Precio % Descuento Especial</th>
                     </tr>
                 </thead>
-                <tbody id="productsTable"></tbody>
+                <tbody id="productsTable">
+                </tbody>
             </table>
 
-            <div class="order-panel">
-                <h3>Pedido / Cotización</h3>
-                <div class="client-info">
-                    <input type="text" id="clientName" placeholder="Cliente / Empresa">
-                    <input type="text" id="clientRif" placeholder="RIF / Cédula">
-                    <input type="text" id="clientPhone" placeholder="Teléfono">
-                    <input type="text" id="sellerName" placeholder="Vendedor">
-                </div>
-                <div id="orderContent"></div>
-            </div>
-
             <div class="actions">
-                <button class="btn btn-pdf" onclick="generatePDF()">Descargar PDF</button>
-                <button class="btn btn-clear" onclick="clearOrder()">Limpiar Pedido</button>
                 <button class="btn btn-logout" onclick="logoutVendor()">Salir</button>
             </div>
         </div>
@@ -160,26 +450,78 @@
 
     <script>
         const ADMIN_PASSWORD = "admin123";
-        let currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
 
         const products = [
-            { id: 1, line: "LINEA DE BOX", name: "BEDBOX 78x188", priceBCV: 102.00, priceSpecial: 73.00 },
-            { id: 2, line: "LINEA DE BOX", name: "BEDBOX 98x188", priceBCV: 106.00, priceSpecial: 76.00 },
-            { id: 3, line: "LINEA DE LITERAS", name: "SEVILLA 100-140x190", priceBCV: 295.00, priceSpecial: 211.00 },
-            { id: 4, line: "LINEA DE CAMAS", name: "VICTORIA 80x190", priceBCV: 119.00, priceSpecial: 85.00 }
+            // LÍNEA DE BOX
+            { id: 1,  line: "LÍNEA DE BOX",      name: "BEDBOX 78x188",                            priceBCV: 102.00, priceSpecial:  73.00 },
+            { id: 2,  line: "LÍNEA DE BOX",      name: "BEDBOX 98x188",                            priceBCV: 106.00, priceSpecial:  76.00 },
+            { id: 3,  line: "LÍNEA DE BOX",      name: "BEDBOX 98x198",                            priceBCV: 112.00, priceSpecial:  80.00 },
+            { id: 4,  line: "LÍNEA DE BOX",      name: "BEDBOX 138x188",                           priceBCV: 139.00, priceSpecial:  99.00 },
+            { id: 5,  line: "LÍNEA DE BOX",      name: "BEDBOX 158x188",                           priceBCV: 165.00, priceSpecial: 118.00 },
+            { id: 6,  line: "LÍNEA DE BOX",      name: "JUEGO DE PATAS P/BEDBOX Standard",         priceBCV:  27.00, priceSpecial:  19.00 },
+            { id: 7,  line: "LÍNEA DE BOX",      name: "JUEGO DE PATAS P/BEDBOX 1.58X1.88",        priceBCV:  32.00, priceSpecial:  23.00 },
+
+            // LÍNEA DE LITERAS
+            { id: 8,  line: "LÍNEA DE LITERAS",  name: "SEVILLA 100-140x190",                      priceBCV: 295.00, priceSpecial: 211.00 },
+            { id: 9,  line: "LÍNEA DE LITERAS",  name: "CAPRI 100-140x190",                        priceBCV: 295.00, priceSpecial: 211.00 },
+            { id: 10, line: "LÍNEA DE LITERAS",  name: "EXTRAFIRME 80x190",                        priceBCV: 235.00, priceSpecial: 168.00 },
+            { id: 11, line: "LÍNEA DE LITERAS",  name: "EXTRAFIRME 100x190",                       priceBCV: 246.00, priceSpecial: 176.00 },
+            { id: 12, line: "LÍNEA DE LITERAS",  name: "SEGOVIA 80x190",                           priceBCV: 220.00, priceSpecial: 157.00 },
+            { id: 13, line: "LÍNEA DE LITERAS",  name: "SEGOVIA 100x190",                          priceBCV: 230.00, priceSpecial: 164.00 },
+            { id: 14, line: "LÍNEA DE LITERAS",  name: "TRILITERA SEGOVIA 100x190",                priceBCV: 332.00, priceSpecial: 237.00 },
+            { id: 15, line: "LÍNEA DE LITERAS",  name: "INSTITUCIONAL 100x190",                    priceBCV: 160.00, priceSpecial: 114.00 },
+
+            // LÍNEA DE CAMAS
+            { id: 16, line: "LÍNEA DE CAMAS",    name: "SANDWICH DE TUBO 80x190",                  priceBCV: 137.00, priceSpecial:  98.00 },
+            { id: 17, line: "LÍNEA DE CAMAS",    name: "SANDWICH DE TUBO 100x190",                 priceBCV: 157.00, priceSpecial: 112.00 },
+            { id: 18, line: "LÍNEA DE CAMAS",    name: "VICTORIA 80x190",                          priceBCV: 119.00, priceSpecial:  85.00 },
+            { id: 19, line: "LÍNEA DE CAMAS",    name: "VICTORIA 100x190",                         priceBCV: 137.00, priceSpecial:  98.00 },
+            { id: 20, line: "LÍNEA DE CAMAS",    name: "VICTORIA 140x190",                         priceBCV: 196.00, priceSpecial: 140.00 },
+            { id: 21, line: "LÍNEA DE CAMAS",    name: "MODENA 100x190",                           priceBCV: 102.00, priceSpecial:  73.00 },
+            { id: 22, line: "LÍNEA DE CAMAS",    name: "MODENA 140x190",                           priceBCV: 154.00, priceSpecial: 110.00 },
+            { id: 23, line: "LÍNEA DE CAMAS",    name: "CLINICA 100x190",                          priceBCV: 281.00, priceSpecial: 201.00 },
+
+            // LÍNEA DE JERGONES
+            { id: 24, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 78x188",  priceBCV: 108.00, priceSpecial:  77.00 },
+            { id: 25, line: "LÍNEA DE JERGONES", name: "TENS P/PLEG.C/RUEDAS P/TRILITERA 98x188",  priceBCV: 111.00, priceSpecial:  79.00 }
         ];
 
+        let currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
+
         function loginAdmin() {
-            if (document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
+                document.getElementById('differentialInput').value = currentDifferential;
             } else {
+                document.getElementById('loginError').textContent = '❌ Contraseña incorrecta';
                 document.getElementById('loginError').classList.remove('hidden');
             }
         }
 
+        function saveDifferential() {
+            const newDiff = parseFloat(document.getElementById('differentialInput').value);
+            if (newDiff > 0) {
+                currentDifferential = newDiff;
+                localStorage.setItem('differential', newDiff);
+                document.getElementById('diffMessage').textContent = '✅ Diferencial cambiario guardado correctamente';
+                setTimeout(() => {
+                    document.getElementById('diffMessage').textContent = '';
+                }, 3000);
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
         function goToVendor() {
             document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
             document.getElementById('vendorSection').classList.remove('hidden');
             renderProducts();
         }
@@ -187,95 +529,78 @@
         function logoutVendor() {
             document.getElementById('vendorSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            clearDiscounts();
         }
 
-        function logoutAdmin() {
-            document.getElementById('adminSection').classList.add('hidden');
-            document.getElementById('loginSection').classList.remove('hidden');
-        }
-
-        function saveDifferential() {
-            currentDifferential = parseFloat(document.getElementById('differentialInput').value);
-            localStorage.setItem('differential', currentDifferential);
-            alert('Diferencial guardado');
-        }
-
-        function calculateFinalPrice(basePrice) {
-            let price = basePrice;
-            if (document.getElementById('discount20').checked) price = price * 0.9025;
-            else if (document.getElementById('discount10').checked) price = price * 0.95;
-            if (document.getElementById('discountCash').checked) price = price * 0.95;
-            return Math.floor(price);
+        function clearDiscounts() {
+            document.getElementById('discount10').checked = false;
+            document.getElementById('discount20').checked = false;
+            document.getElementById('discountCash').checked = false;
         }
 
         function renderProducts() {
-            const tbody = document.getElementById('productsTable');
-            tbody.innerHTML = '';
+            const table = document.getElementById('productsTable');
+            table.innerHTML = '';
             let lastLine = '';
-            
-            products.forEach(p => {
-                if (p.line !== lastLine) {
-                    tbody.innerHTML += `<tr class="line-header"><td colspan="4">${p.line}</td></tr>`;
-                    lastLine = p.line;
+
+            products.forEach(product => {
+                if (product.line !== lastLine) {
+                    const lineRow = document.createElement('tr');
+                    lineRow.className = 'line-header';
+                    lineRow.innerHTML = `<td colspan="3">${product.line}</td>`;
+                    table.appendChild(lineRow);
+                    lastLine = product.line;
                 }
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${p.name}</td>
-                        <td>$${calculateFinalPrice(p.priceBCV)}</td>
-                        <td>$${calculateFinalPrice(p.priceSpecial)}</td>
-                        <td><input type="number" class="qty-input" id="qty_${p.id}" min="0" value="0" onchange="renderOrder()"></td>
-                    </tr>
+
+                const row = document.createElement('tr');
+                const bcvDisplay = product.priceBCV !== null
+                    ? `$${calculateFinalPrice(product.priceBCV)}`
+                    : '—';
+                const specialDisplay = `$${calculateFinalPrice(product.priceSpecial)}`;
+
+                row.innerHTML = `
+                    <td class="product-name">${product.name}</td>
+                    <td class="price">${bcvDisplay}</td>
+                    <td class="price">${specialDisplay}</td>
                 `;
+                table.appendChild(row);
             });
-            renderOrder();
         }
 
-        function renderOrder() {
-            let items = [];
-            let total = 0;
-            
-            products.forEach(p => {
-                let qty = parseInt(document.getElementById(`qty_${p.id}`)?.value || 0);
-                if (qty > 0) {
-                    let price = calculateFinalPrice(p.priceSpecial);
-                    let subtotal = price * qty;
-                    total += subtotal;
-                    items.push(`<tr><td>${p.name}</td><td>${qty}</td><td>$${price}</td><td>$${subtotal}</td></tr>`);
-                }
-            });
-            
-            document.getElementById('orderContent').innerHTML = items.length ? `
-                <table class="order-table">
-                    <tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr>
-                    ${items.join('')}
-                    <tr class="grand-total"><td colspan="3"><strong>TOTAL</strong></td><td><strong>$${total}</strong></td></tr>
-                </table>
-            ` : '<p>Agrega cantidades para construir el pedido...</p>';
+        // Redondeo personalizado: si el decimal es <= 0.5 se trunca, si es > 0.5 se sube al entero siguiente
+        function roundPrice(price) {
+            const floor = Math.floor(price);
+            const decimal = price - floor;
+            return decimal > 0.5 ? Math.ceil(price) : floor;
         }
 
-        function clearOrder() {
-            products.forEach(p => {
-                let input = document.getElementById(`qty_${p.id}`);
-                if (input) input.value = 0;
-            });
-            renderOrder();
+        function calculateFinalPrice(basePrice) {
+            let price = parseFloat(basePrice);
+
+            // Descuentos por cantidad (independientes, pero más de 20 incluye más de 10)
+            if (document.getElementById('discount20').checked) {
+                // Más de 20 = 5% + 5% = 10% acumulativo
+                price = price * 0.95 * 0.95;
+            } else if (document.getElementById('discount10').checked) {
+                // Más de 10 = 5%
+                price = price * 0.95;
+            }
+
+            // Descuento de contado (aplica adicional)
+            if (document.getElementById('discountCash').checked) {
+                price = price * 0.95;
+            }
+
+            return roundPrice(price);
         }
 
         function updatePrices() {
             renderProducts();
         }
 
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("FAVECA - Cotización", 20, 20);
-            doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
-            doc.text(`Cliente: ${document.getElementById('clientName').value || 'N/A'}`, 20, 40);
-            doc.save("cotizacion.pdf");
-        }
-
         // Inicializar
-        renderProducts();
+        currentDifferential = parseFloat(localStorage.getItem('differential')) || 1.40;
     </script>
 </body>
 </html>
